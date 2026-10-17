@@ -53,3 +53,20 @@ button {
 button:hover {
     background: #22c55e;
 }
+
+.controls {
+    margin-top: 10px;
+}
+
+.controls button {
+    min-width: 55px;
+}
+
+.hint {
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+#message {
+    min-height: 22px;
+}
