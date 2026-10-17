@@ -1,3 +1,4 @@
+
 const canvas = document.getElementById("gameBoard");
 const ctx = canvas.getContext("2d");
 
@@ -8,45 +9,39 @@ const startBtn = document.getElementById("startBtn");
 const box = 20;
 const total = canvas.width / box;
 
-
-// variables
-
 let snake;
 let food;
-let dx;  // for direction
+let dx;
 let dy;
 let score;
 let gameLoop;
 let running = false;
 
-
-//finction for food 
-
-function randomFood(){
+function randomFood() {
     let newFood;
 
-    do{
+    do {
         newFood = {
-            x: Math.floor(Math.random()* total),
-            y: Math.floor(Math.random() * total),
+            x: Math.floor(Math.random() * total),
+            y: Math.floor(Math.random() * total)
         };
-    } while(
-        snake.some(function(part){
-            return part.x === newFood.x && part.y === newFood.y;
+    } while (
+        snake.some(function (part) {
+            return part.x === newFood.x &&
+                   part.y === newFood.y;
         })
     );
 
     return newFood;
 }
 
-
-function startGame(){
+function startGame() {
     clearInterval(gameLoop);
 
     snake = [
-        {x : 10, y:10},
-        {x : 9, y:10},
-        {x : 8, y:10},
+        { x: 10, y: 10 },
+        { x: 9, y: 10 },
+        { x: 8, y: 10 }
     ];
 
     dx = 1;
@@ -54,7 +49,7 @@ function startGame(){
     score = 0;
     running = true;
 
-     scoreText.textContent = score;
+    scoreText.textContent = score;
     message.textContent = "Game is running!";
     startBtn.textContent = "Restart Game";
 
@@ -167,7 +162,7 @@ function endGame(won = false) {
     clearInterval(gameLoop);
 
     message.textContent = won
-        ? "You Win!"
+        ? "You Win! 🏆"
         : "Game Over! Score: " + score;
 
     startBtn.textContent = "Play Again";
