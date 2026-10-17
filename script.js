@@ -17,3 +17,6 @@ let dx;  // for direction
 let dy;
 let score;
 let gameLoop;
+let running = false;
+
+
