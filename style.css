@@ -19,3 +19,37 @@ body {
     width: 100%;
     max-width: 460px;
 }  /*container*/
+
+h1 {
+    color: #4ade80;
+}
+
+.score-box {
+    font-size: 22px;
+    margin: 15px;
+}
+
+canvas {
+    width: min(100%, 400px);
+    height: auto;
+    background: #1e293b;
+    border: 3px solid #4ade80;
+    border-radius: 8px;
+}
+
+button {
+    padding: 12px 18px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    background: #4ade80;
+    color: #101827;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+button:hover {
+    background: #22c55e;
+}
