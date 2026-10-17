@@ -20,3 +20,21 @@ let gameLoop;
 let running = false;
 
 
+//finction for food 
+
+function randomFood(){
+    let newFood;
+
+    do{
+        newFood = {
+            x: Math.floor(Math.random()* total),
+            y: Math.floor(Math.random() * total),
+        };
+    } while(
+        snake.some(function(part){
+            return part.x === newFood.x && part.y === newFood.y;
+        })
+    );
+
+    return newFood;
+}
