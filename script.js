@@ -198,4 +198,4 @@ snake = [
 ];
 
 food = { x: 15, y: 10 };
-drawGame();
+drawGame(); 
