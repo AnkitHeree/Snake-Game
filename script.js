@@ -9,13 +9,20 @@ const startBtn = document.getElementById("startBtn");
 const box = 20;
 const total = canvas.width / box;
 
-let snake;
+let snake = [];
 let food;
-let dx;
-let dy;
-let score;
-let gameLoop;
+let dx = 1;
+let dy = 0;
+let score = 0;
+let gameLoop = null;
 let running = false;
+
+let touchStartX = 0;
+let touchStartY = 0;
+
+// Prevent multiple direction changes in one game tick.
+let nextDirection = "right";
+let canChangeDirection = true;
 
 function randomFood() {
     let newFood;
@@ -46,6 +53,8 @@ function startGame() {
 
     dx = 1;
     dy = 0;
+    nextDirection = "right";
+    canChangeDirection = true;
     score = 0;
     running = true;
 
@@ -63,7 +72,7 @@ function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw food
-    ctx.fillStyle = "#fb7185";
+    ctx.fillStyle = "#ac011a";
     ctx.beginPath();
     ctx.arc(
         food.x * box + box / 2,
@@ -76,7 +85,9 @@ function drawGame() {
 
     // Draw snake
     snake.forEach(function (part, index) {
-        ctx.fillStyle = index === 0 ? "#4ade80" : "#16a34a";
+        ctx.fillStyle = index === 0
+            ? "#4ade80"
+            : "#16a34a";
 
         ctx.fillRect(
             part.x * box + 1,
@@ -88,6 +99,16 @@ function drawGame() {
 }
 
 function updateGame() {
+    if (!running) {
+        return;
+    }
+
+    dx = nextDirection === "left" ? -1 :
+         nextDirection === "right" ? 1 : 0;
+
+    dy = nextDirection === "up" ? -1 :
+         nextDirection === "down" ? 1 : 0;
+
     const head = {
         x: snake[0].x + dx,
         y: snake[0].y + dy
@@ -107,12 +128,12 @@ function updateGame() {
     const eating = head.x === food.x &&
                    head.y === food.y;
 
-    // If not eating, the tail moves away.
-    // So moving into the old tail position is allowed.
+    // Tail moves away when the snake is not eating.
     const body = eating ? snake : snake.slice(0, -1);
 
     const hitBody = body.some(function (part) {
-        return part.x === head.x && part.y === head.y;
+        return part.x === head.x &&
+               part.y === head.y;
     });
 
     if (hitBody) {
@@ -127,6 +148,7 @@ function updateGame() {
         scoreText.textContent = score;
 
         if (snake.length === total * total) {
+            drawGame();
             endGame(true);
             return;
         }
@@ -136,30 +158,33 @@ function updateGame() {
         snake.pop();
     }
 
+    canChangeDirection = true;
     drawGame();
 }
 
 function changeDirection(direction) {
-    if (!running) return;
-
-    if (direction === "up" && dy !== 1) {
-        dx = 0;
-        dy = -1;
-    } else if (direction === "down" && dy !== -1) {
-        dx = 0;
-        dy = 1;
-    } else if (direction === "left" && dx !== 1) {
-        dx = -1;
-        dy = 0;
-    } else if (direction === "right" && dx !== -1) {
-        dx = 1;
-        dy = 0;
+    if (!running || !canChangeDirection) {
+        return;
     }
+
+    // Never allow a 180-degree turn.
+    if (
+        (direction === "up" && dy === 1) ||
+        (direction === "down" && dy === -1) ||
+        (direction === "left" && dx === 1) ||
+        (direction === "right" && dx === -1)
+    ) {
+        return;
+    }
+
+    nextDirection = direction;
+    canChangeDirection = false;
 }
 
 function endGame(won = false) {
     running = false;
     clearInterval(gameLoop);
+    gameLoop = null;
 
     message.textContent = won
         ? "You Win! 🏆"
@@ -168,6 +193,7 @@ function endGame(won = false) {
     startBtn.textContent = "Play Again";
 }
 
+// Keyboard controls
 document.addEventListener("keydown", function (event) {
     const keys = {
         ArrowUp: "up",
@@ -182,15 +208,51 @@ document.addEventListener("keydown", function (event) {
     }
 });
 
+// On-screen direction buttons
 document.querySelectorAll("[data-dir]").forEach(function (button) {
     button.addEventListener("click", function () {
         changeDirection(button.dataset.dir);
     });
 });
 
+// Mobile swipe controls
+canvas.addEventListener("touchstart", function (event) {
+    event.preventDefault();
+
+    touchStartX = event.changedTouches[0].clientX;
+    touchStartY = event.changedTouches[0].clientY;
+}, { passive: false });
+
+canvas.addEventListener("touchend", function (event) {
+    event.preventDefault();
+
+    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndY = event.changedTouches[0].clientY;
+
+    const differenceX = touchEndX - touchStartX;
+    const differenceY = touchEndY - touchStartY;
+
+    if (Math.max(
+        Math.abs(differenceX),
+        Math.abs(differenceY)
+    ) < 20) {
+        return;
+    }
+
+    if (Math.abs(differenceX) > Math.abs(differenceY)) {
+        changeDirection(
+            differenceX > 0 ? "right" : "left"
+        );
+    } else {
+        changeDirection(
+            differenceY > 0 ? "down" : "up"
+        );
+    }
+}, { passive: false });
+
 startBtn.addEventListener("click", startGame);
 
-// Show the initial board
+// Initial preview before starting
 snake = [
     { x: 10, y: 10 },
     { x: 9, y: 10 },
@@ -198,4 +260,4 @@ snake = [
 ];
 
 food = { x: 15, y: 10 };
-drawGame(); 
+drawGame();

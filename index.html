@@ -1,44 +1,53 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sname Game</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <link rel = "stylesheet" href="style.css">
+    <meta name="theme-color" content="#101827">
+    <title>Snake Game</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-<div class=" game-container">
-    <h1>Snake Game</h1>
 
-    <div class="score-box">
-        Score : <span id="score">0</span>
-    </div>
+    <main class="game-container">
+        <h1>🐍 Snake Game</h1>
 
-    <canvas id="gameBoard" width = "400" height="400"></canvas>
-
-    <p id=" message"> Press start to Play Game</p>
-
-    <button id = "startBtn">Start Game</button>
-
-    <div class="controls">
-
-        <button data-dir="up">UP</button>
-
-        <div>
-             <button data-dir="left">LEFT</button>
-               <button data-dir="down">Down</button>
-                 <button data-dir="right">Right</button> 
+        <div class="score-box">
+            Score: <span id="score">0</span>
         </div>
 
-    </div>
+        <div class="board-container">
+            <canvas id="gameBoard"
+                    width="400"
+                    height="400"
+                    aria-label="Snake game board"></canvas>
+        </div>
 
-    <p class = "hint"> Arrow keys or Buttons ka use kro for move</p>
+        <p id="message" aria-live="polite">
+            Press Start to Play!
+        </p>
 
-</div>
+        <button id="startBtn">Start Game</button>
 
-<script src="script.js"></script>
+        <div class="controls">
+            <button type="button" data-dir="up" aria-label="Up">⬆️</button>
 
+            <div class="horizontal-controls">
+                <button type="button" data-dir="left" aria-label="Left">⬅️</button>
+                <button type="button" data-dir="down" aria-label="Down">⬇️</button>
+                <button type="button" data-dir="right" aria-label="Right">➡️</button>
+            </div>
+        </div>
+
+        <p class="hint">
+            Use arrow keys, touch buttons or swipe to move
+        </p>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
