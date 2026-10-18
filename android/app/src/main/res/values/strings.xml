@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Snake Game</string>
+    <string name="title_activity_main">Snake Game</string>
+    <string name="package_name">com.ankit.snakegame</string>
+    <string name="custom_url_scheme">com.ankit.snakegame</string>
+</resources>
